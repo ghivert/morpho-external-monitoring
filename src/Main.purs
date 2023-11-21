@@ -3,6 +3,7 @@ module Main (main) where
 import Prelude
 
 import Data.Maybe (Maybe(..))
+import Dotenv (loadFile) as Dotenv
 import Effect (Effect)
 import Effect.Aff (Aff, launchAff_)
 import Effect.Class (liftEffect)
@@ -17,12 +18,16 @@ checkApiAndSendMessage env = do
     Nothing -> pure unit
     Just m -> do
       result <- Telegram.sendMessage env m
-      liftEffect $ log $ "Message to send: " <> m
-      liftEffect $ log $ "Server response: " <> result
+      liftEffect do
+        log $ "Message to send: " <> m
+        log $ "Server response: " <> result
 
 main :: Effect Unit
-main = do
-  env <- Telegram.readEnv
+main = launchAff_ do
+  Dotenv.loadFile
+  env <- liftEffect Telegram.readEnv
   case env of
-    Just env_ -> launchAff_ $ checkApiAndSendMessage env_
-    Nothing -> log "Missing variable in environment"
+    Nothing -> liftEffect $ log "Missing variable in environment."
+    Just env_ -> do
+      liftEffect $ log "Starting querying Morpho API…"
+      checkApiAndSendMessage env_

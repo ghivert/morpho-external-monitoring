@@ -56,6 +56,6 @@ fetchApi endpt = do
 
 checkApiUp :: Aff (Maybe String)
 checkApiUp = do
-  results <- parSequence $ allEndpoints <#> fetchApi
   now <- liftEffect Now.nowDateTime
+  results <- parSequence $ allEndpoints <#> fetchApi
   pure $ selectMessage results now
