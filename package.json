@@ -1,0 +1,15 @@
+{
+  "name": "morpho-external-monitoring",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "spago run",
+    "postinstall": "spago build",
+    "test": "spago test"
+  },
+  "dependencies": {
+    "purescript": "^0.15.12",
+    "spago": "^0.21.0"
+  }
+}
