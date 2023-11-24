@@ -46,7 +46,7 @@ selectMessage results now =
       Just $ failuresKeeped <#> unsafePartial Maybe.fromJust # String.joinWith ", "
     else
       let hour = fromEnum $ DateTime.hour $ DateTime.time now in
-      if hour < 8 || hour > 10 then Nothing else Just successMessage
+      if hour /= 8 then Nothing else Just successMessage
 
 fetchApi :: String -> Aff (Maybe String)
 fetchApi endpt = do
